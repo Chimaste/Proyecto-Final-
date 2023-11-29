@@ -1,0 +1,130 @@
+float precioPorHora = 10.0; // Precio por hora, puedes cambiar este valor según tus necesidades
+int contador = 0;
+boolean reproduciendo = false;
+boolean grabando = false;
+int tiempoPrevio;
+float tiempoReproduccion = 0; // Variable para almacenar el tiempo de reproducción en segundos
+
+String modeloDeAuto = "";  // Variable para almacenar el modelo de auto
+String patente = "";      // Variable para almacenar la patente del auto
+
+String entradaTexto = "";  // Variable para almacenar la entrada de texto
+
+void setup() {
+  size(800, 400);
+  tiempoPrevio = millis();  // Inicializa el tiempo previo al inicio
+}
+
+void draw() {
+  background(255);
+
+  // Dibuja el contador en un recuadro claro con contorno
+  stroke(200);
+  fill(240);
+  rect(10, 10, 180, 40, 10);
+  fill(0);
+  noStroke();
+  textAlign(LEFT, TOP);
+  textSize(24);
+  text("Contador: " + contador, 20, 20);
+
+  // Dibuja la suma del precio en el centro
+  stroke(200);
+  fill(240);
+  rect(width / 2 - 120, height / 2 - 60, 240, 120, 10);
+  fill(0);
+  noStroke();
+  textAlign(CENTER, CENTER);
+  textSize(32);
+  text("Precio: $" + nf(precioPorHora, 1, 2) + " por hora", width / 2, height / 2);
+
+  // Dibuja el modelo de auto y la patente en la parte superior izquierda
+  stroke(200);
+  fill(240);
+  rect(10, 60, 200, 80, 10);
+  fill(0);
+  noStroke();
+  textAlign(LEFT, TOP);
+  textSize(16);
+  text("Modelo de Auto: " + modeloDeAuto, 20, 70);  // Aquí se muestra el modelo de auto
+  text("Patente: " + patente, 20, 100);              // Aquí se muestra la patente del auto
+
+  // Dibuja botones de reproducción y grabación
+  drawBoton(10, height - 50, 60, 30, "Play", color(0, 255, 0), reproduciendo);
+  drawBoton(80, height - 50, 60, 30, "Pausa", color(255, 0, 0), !reproduciendo);
+  drawBoton(150, height - 50, 60, 30, "Grabar", color(0, 0, 255), grabando);
+
+  // Muestra el tiempo de reproducción
+  textAlign(CENTER, TOP);
+  textSize(18);
+  text("Tiempo de Reproducción: " + nf(tiempoReproduccion, 0, 2) + " segundos", width / 2, 10);
+
+  // Muestra el campo de entrada de texto
+  textAlign(LEFT, TOP);
+  textSize(16);
+  text("Ingrese texto: ", 10, height - 110);
+  rect(140, height - 110, 200, 25);
+  text(entradaTexto, 145, height - 107);
+}
+
+void drawBoton(float x, float y, float ancho, float alto, String etiqueta, color c, boolean activado) {
+  // Dibuja un botón con una etiqueta
+  stroke(0);
+  strokeWeight(2);
+  fill(c);
+  rect(x, y, ancho, alto, 10);
+  fill(255);
+  noStroke();
+  textAlign(CENTER, CENTER);
+  textSize(14);
+  text(etiqueta, x + ancho / 2, y + alto / 2);
+
+  // Si el botón está activado, dibuja un contorno alrededor
+  if (activado) {
+    noFill();
+    stroke(0);
+    rect(x, y, ancho, alto, 10);
+  }
+}
+
+void mousePressed() {
+  // Verifica si se hizo clic en los botones de reproducción y grabación
+  if (mouseX > 10 && mouseX < 70 && mouseY > height - 50 && mouseY < height - 20) {
+    // Clic en el botón de Play
+    reproduciendo = true;
+    grabando = false;
+    tiempoPrevio = millis();
+  } else if (mouseX > 80 && mouseX < 140 && mouseY > height - 50 && mouseY < height - 20) {
+    // Clic en el botón de Pausa
+    reproduciendo = false;
+  } else if (mouseX > 150 && mouseX < 210 && mouseY > height - 50 && mouseY < height - 20) {
+    // Clic en el botón de Grabar
+    grabando = !grabando;
+  }
+}
+
+void keyPressed() {
+  // Verifica qué tecla se presiona y agrega el modelo de auto y la patente
+  if (key == 'm' || key == 'M') {
+    modeloDeAuto = input("Ingrese el modelo de auto: ");
+  } else if (key == 'p' || key == 'P') {
+    patente = input("Ingrese la patente del auto: ");
+  }
+}
+
+void keyTyped() {
+  // Captura las teclas que se presionan para la entrada de texto
+  if (keyCode != ENTER && keyCode != BACKSPACE) {
+    entradaTexto += key;
+  } else if (keyCode == BACKSPACE) {
+    // Borra el último caracter si se presiona la tecla de retroceso
+    if (entradaTexto.length() > 0) {
+      entradaTexto = entradaTexto.substring(0, entradaTexto.length() - 1);
+    }
+  }
+}
+
+String input(String prompt) {
+  return javax.swing.JOptionPane.showInputDialog(prompt);
+}
+
